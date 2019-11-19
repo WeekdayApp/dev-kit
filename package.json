@@ -1,0 +1,53 @@
+{
+  "name": "@weekday/dev-kit",
+  "title": "Weekday DevKit",
+  "keywords": [
+    "Weekday"
+  ],
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "sideEffects": [
+    "lib/*"
+  ],
+  "pre-commit": [],
+  "files": [
+    "lib"
+  ],
+  "browserslist": [
+    "last 2 version",
+    "Firefox ESR",
+    "> 1%",
+    "ie >= 9"
+  ],
+  "repository": "https://github.com/getweekday/dev-kit",
+  "bugs": {
+    "url": "https://github.com/getweekday/dev-kit",
+    "email": "jo@joduplessis.com"
+  },
+  "contributors": [
+    {
+      "name": "joduplessis"
+    }
+  ],
+  "homepage": "https://github.com/getweekday/dev-kit",
+  "deprecated": false,
+  "version": "0.1.0",
+  "description": "Development kit for building apps for Weekday",
+  "scripts": {
+    "test": "",
+    "dev": "tsc -w -p tsconfig.json",
+    "build": "tsc -p tsconfig.json",
+    "lint": "tslint --project ./"
+  },
+  "author": "Jo du Plessis",
+  "license": "MIT",
+  "peerDependencies": {},
+  "dependencies": {},
+  "devDependencies": {
+    "ts-loader": "^6.0.4",
+    "tslint": "^5.18.0",
+    "tslint-loader": "^3.5.4",
+    "typescript": "^3.5.3"
+  }
+}

@@ -1,120 +1,140 @@
+import { IAction } from "./action/IAction";
+import { IMessage } from "./message/IMessage";
+
+declare global {
+  interface Window { WEEKDAY_DEVKIT_TOKEN: string; }
+}
+
 /**
- * Keg queue class
- * @class
- * @constructor
- * @public
+ * Stores the token on the window object
+ * @param {String} token - App token
  */
-export default class Keg {
-  static instances: any = {};
+export function init(token: string): void {
+  window.WEEKDAY_DEVKIT_TOKEN = token;
+}
 
-  taps: any = {};
-  queue: any = {};
-  spikes: any = {};
-  name: string = "";
+/**
+ * Retreives the token on the window object
+ */
+export function getToken(): string {
+  if (window.WEEKDAY_DEVKIT_TOKEN === null) throw new Error("Please intialize before using");
 
-  constructor(name: string) {
-    this.name = name;
-  }
+  return window.WEEKDAY_DEVKIT_TOKEN;
+}
 
-  /**
-   * Initialized the singletone factory
-   * @param {String} kegName - ID for the object
-   */
-  static keg(kegName: string) {
-    // If it doesn't exist, create it
-    if (!this.instances[kegName]) this.instances[kegName] = new Keg(kegName);
+/**
+ * Polls the document scrollHeight and sends a message to Weekday
+ * to adjust the containing iframe
+ */
+export function autoAdjustMessageHeight(): void {
+   let currentHeight: number = 0;
 
-    // Return the correct keg to use
-    return this.instances[kegName];
-  }
+   // Important: we want to only run this once
+   // (once there is a descrepency)
+   const interval: any = setInterval(() => {
+     const document: any = window.document.documentElement;
+     const scrollHeight: number = document.scrollHeight;
 
-  /**
-   * Initialized the listening mechanic
-   * @param {String} tapName - topic for the queue
-   * @param {Object} callback - function for each call to process the q
-   * @param {Object} empty - function for when it's completed
-   */
-  tap(tapName: string, callback: any, empty: any) {
-    // If this outlet doesn't exist - create the array
-    // So the push doesn't break
-    if (!this.taps[tapName]) this.taps[tapName] = [];
+     if (scrollHeight !== currentHeight) {
+       currentHeight = scrollHeight;
 
-    // Push our callback/empty to the stack
-    this.taps[tapName].push({ callback, empty });
+       window.location.search.split("&").map((query: string) => {
+         const parts: string[] = query.split("=");
 
-    // Run it as soon as it's up
-    // There might be nothing
-    this.pour(tapName);
-  }
+         if (parts[0] === "weekdayId" && parts.length === 2) {
+           const message: IMessage = {
+             type: "AUTO_ADJUST_MESSAGE_HEIGHT",
+             weekdayId: parts[1],
+             payload: { scrollHeight },
+           };
 
-  /**
-   * Add midldeware
-   * @param {String} tapName - specifies the queue
-   * @param {Object} callback - middleware function the value passes through
-   */
-  spike(tapName: string, func: any) {
-    // If this spike doesn't exist, create it
-    if (!this.spikes[tapName]) this.spikes[tapName] = [];
+           // Send our message to the app
+           postAppMessage(message);
 
-    // Add this value to the Q
-    this.spikes[tapName].push(func);
-  }
+           // Now kill it so it doesn't run the whole time
+           clearInterval(interval);
+         }
+       });
+     }
+   }, 500);
+ }
 
-  /**
-   * Outlet and sending values to listeners
-   * @param {String} tapName - specifies the queue
-   */
-  pour(tapName: string) {
-    // If there is no queue - return
-    if (!this.queue[tapName]) return;
+ /**
+  * Closes an app modal
+  */
+export function closeAppModal(): void {
+  const action: IAction = {
+    type: "modal-close",
+  };
 
-    // Value to push out
-    let value: any = this.queue[tapName][0];
+  const message: IMessage = {
+    type: "DISPATCH_APP_ACTION",
+    action,
+  };
 
-    // If there is no value - return
-    if (!value) return;
+  postAppMessage(message);
+}
 
-    // Spike our drink
-    if (this.spikes[tapName]) {
-      value = this.spikes[tapName].reduce((accumulator: any, currentValue: any) => currentValue(accumulator), value);
-    }
+/**
+ * Closes an app panel
+ */
+export function closeAppPanel(): void {
+  const action: IAction = {
+    type: "panel-close",
+  };
 
-    // Pour it into all the taps
-    // Then also give our tap a function to move to the next one
-    this.taps[tapName].map((tap: any) => tap.callback(value, () => {
-      // Remove the current one from the stack
-      this.queue[tapName].shift();
+  const message: IMessage = {
+    type: "DISPATCH_APP_ACTION",
+    action,
+  };
 
-      // If it's empty (not uncreated)
-      // then call the empty one
-      // Or pour it again
-      if (this.queue[tapName].length == 0) {
-        this.taps[tapName].map((tap: any) => {
-          if (tap.empty) tap.empty();
-        });
-      } else {
-        this.pour(tapName);
-      }
-    }))
-  }
+  postAppMessage(message);
+}
 
-  /**
-   * Adds a message to the queue
-   * @param {String} tapName - specifies the queue
-   * @param {Object} value - actual message
-   */
-  refill(tapName: string, value: any) {
-    // If this tap doesn't exist, create it
-    if (!this.queue[tapName]) this.queue[tapName] = [];
+/**
+ * Opens an app panel with an action
+ * @param {String} name - Panel title
+ * @param {String} name - Panel URL
+ */
+export function openAppPanel(name: string, url: string): void {
+  const action: IAction = {
+    type: "panel",
+    name,
+    url,
+  };
 
-    // Add this value to the Q
-    this.queue[tapName].push(value);
+  const message: IMessage = {
+    type: "DISPATCH_APP_ACTION",
+    action,
+  };
 
-    // Also check it's there - don't refill something can doesn't exist
-    if (!this.taps[tapName]) return;
+  postAppMessage(message);
+}
 
-    // And then only ever auto run the top value
-    // Important for sending a syncronous stream - 1 by 1
-    if (this.queue[tapName].length == 1) this.pour(tapName);
-  }
+/**
+ * Opens an app modal with an action
+ * @param {String} name - Modal title
+ * @param {String} name - Modal URL
+ */
+export function openAppModal(name: string, url: string): void {
+  const action: IAction = {
+    type: "modal",
+    name,
+    url,
+  };
+
+  const message: IMessage = {
+    type: "DISPATCH_APP_ACTION",
+    action,
+  };
+
+  postAppMessage(message);
+}
+
+/**
+ * Sends a message to the parent window
+ * @param {IMessage} message - Message object
+ */
+export function postAppMessage(message: IMessage): void {
+  window.top.postMessage(message, "*");
 }

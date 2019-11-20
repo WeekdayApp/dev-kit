@@ -15,6 +15,7 @@
     "no-consecutive-blank-lines": false,
     "ordered-imports": [false],
     "object-literal-sort-keys": [false],
+    "interface-name" : [false],
     "no-console": {
       "severity": "warning",
       "options": ["debug", "info", "log", "time", "timeEnd", "trace"]

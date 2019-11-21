@@ -41,11 +41,11 @@ export function autoAdjustMessageHeight(): void {
        window.location.search.split("&").map((query: string) => {
          const parts: string[] = query.split("=");
 
-         if (parts[0] === "weekdayId" && parts.length === 2) {
+         if (parts[0] === "resizeId" && parts.length === 2) {
            const message: IMessage = {
              type: "AUTO_ADJUST_MESSAGE_HEIGHT",
-             weekdayId: parts[1],
-             payload: { scrollHeight },
+             resizeId: parts[1],
+             payload: scrollHeight,
            };
 
            // Send our message to the app

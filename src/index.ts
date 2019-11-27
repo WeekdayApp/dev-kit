@@ -1,5 +1,8 @@
 import { IAction } from "./action/IAction";
 import { IMessage } from "./message/IMessage";
+import { IAttachment } from "./attachment/IAttachment";
+
+const WEBHOOK_URL: string = "https://api.weekday.sh/v1/webhook";
 
 declare global {
   interface Window { WEEKDAY_DEVKIT_TOKEN: string; }
@@ -132,9 +135,76 @@ export function openAppModal(name: string, url: string): void {
 }
 
 /**
+ * Tells the app store than auth has completed 
+ * And to close the auth modal automagically
+ */
+export function authComplete(): void {
+  const message: IMessage = {
+    type: "AUTH_COMPLETE",
+  };
+
+  postAppMessage(message);
+}
+
+/**
  * Sends a message to the parent window
  * @param {IMessage} message - Message object
  */
 export function postAppMessage(message: IMessage): void {
   window.top.postMessage(message, "*");
+}
+
+/**
+ * Creates a channel message using app channel webhook
+ * @param {String} channelToken - temp channel intsall token
+ * @param {String} appToken - app token
+ * @param {String} message - text message for the channel message
+ * @param {[IAttachment]} attachments - list of attachments to include
+ * @param {String} payload - string payload sent back to the app message display
+ */
+export function createChannelMessage(
+  channelToken: string, 
+  appToken: string,
+  message: string,
+  attachments: [IAttachment],
+  payload: string
+): Promise<Response> {
+  return fetch(`${WEBHOOK_URL}/${channelToken}`, {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "bearer " + appToken,
+    },
+    redirect: "follow", 
+    referrer: "no-referrer", 
+    body: JSON.stringify({ message, attachments, payload })
+  });
+}
+
+/**
+ * Creates a channel message using app channel webhook
+ * @param {String} channelToken - temp channel intsall token
+ * @param {String} appToken - app token
+ * @param {String} payload - string identifiying the channel app message
+ */
+export function deleteChannelMessage(
+  appToken: string,
+  channelToken: string, 
+  payload: string,
+): Promise<Response> {
+  return fetch(`${WEBHOOK_URL}/${channelToken}/${payload}`, {
+    method: "DELETE",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "bearer " + appToken,
+    },
+    redirect: "follow", 
+    referrer: "no-referrer", 
+  });
 }

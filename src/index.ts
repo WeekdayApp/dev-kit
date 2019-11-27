@@ -160,14 +160,14 @@ export function postAppMessage(message: IMessage): void {
  * @param {String} appToken - app token
  * @param {String} message - text message for the channel message
  * @param {[IAttachment]} attachments - list of attachments to include
- * @param {String} payload - string payload sent back to the app message display
+ * @param {String} resourceId - string identifying the remote resource
  */
 export function createChannelMessage(
   channelToken: string,
   appToken: string,
   message: string,
   attachments: [IAttachment],
-  payload: string
+  resourceId: string
 ): Promise<Response> {
   return fetch(`${WEBHOOK_URL}/${channelToken}`, {
     method: "POST",
@@ -180,7 +180,7 @@ export function createChannelMessage(
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ message, attachments, payload })
+    body: JSON.stringify({ message, attachments, resourceId })
   });
 }
 
@@ -188,14 +188,46 @@ export function createChannelMessage(
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
  * @param {String} appToken - app token
- * @param {String} payload - string identifiying the channel app message
+ * @param {String} message - text message for the channel message
+ * @param {[IAttachment]} attachments - list of attachments to include
+ * @param {String} resourceId - new string identifying the remote resource
+ * @param {String} currentResourceId - old string identifying the remote resource
+ */
+export function updateChannelMessage(
+  channelToken: string,
+  appToken: string,
+  message: string,
+  attachments: [IAttachment],
+  currentResourceId: string,
+  resourceId: string,
+): Promise<Response> {
+  return fetch(`${WEBHOOK_URL}/${channelToken}/${currentResourceId}`, {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "bearer " + appToken,
+    },
+    redirect: "follow",
+    referrer: "no-referrer",
+    body: JSON.stringify({ message, attachments, resourceId })
+  });
+}
+
+/**
+ * Creates a channel message using app channel webhook
+ * @param {String} channelToken - temp channel intsall token
+ * @param {String} appToken - app token
+ * @param {String} resourceId - string identifiying the channel app message
  */
 export function deleteChannelMessage(
   appToken: string,
   channelToken: string,
-  payload: string,
+  resourceId: string,
 ): Promise<Response> {
-  return fetch(`${WEBHOOK_URL}/${channelToken}/${payload}`, {
+  return fetch(`${WEBHOOK_URL}/${channelToken}/${resourceId}`, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",

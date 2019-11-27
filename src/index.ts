@@ -191,17 +191,49 @@ export function createChannelMessage(
  * @param {String} message - text message for the channel message
  * @param {[IAttachment]} attachments - list of attachments to include
  * @param {String} resourceId - new string identifying the remote resource
- * @param {String} currentResourceId - old string identifying the remote resource
+ * @param {String} messageId - id of message to update
  */
 export function updateChannelMessage(
   channelToken: string,
   appToken: string,
-  message: string,
-  attachments: [IAttachment],
+  message: string | null,
+  attachments: [IAttachment] | null,
+  messageId: string,
+  resourceId: string,
+): Promise<Response> {
+  return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "bearer " + appToken,
+    },
+    redirect: "follow",
+    referrer: "no-referrer",
+    body: JSON.stringify({ message, attachments, resourceId })
+  });
+}
+
+/**
+ * Creates a channel message using app channel webhook
+ * @param {String} channelToken - temp channel intsall token
+ * @param {String} appToken - app token
+ * @param {String} message - text message for the channel message
+ * @param {[IAttachment]} attachments - list of attachments to include
+ * @param {String} resourceId - new string identifying the remote resource
+ * @param {String} currentResourceId - old string identifying the remote resource
+ */
+export function updateChannelMessageResourceId(
+  channelToken: string,
+  appToken: string,
+  message: string | null,
+  attachments: [IAttachment] | null,
   currentResourceId: string,
   resourceId: string,
 ): Promise<Response> {
-  return fetch(`${WEBHOOK_URL}/${channelToken}/${currentResourceId}`, {
+  return fetch(`${WEBHOOK_URL}/${channelToken}/resource/${currentResourceId}`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",

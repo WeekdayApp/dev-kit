@@ -135,7 +135,7 @@ export function openAppModal(name: string, url: string): void {
 }
 
 /**
- * Tells the app store than auth has completed 
+ * Tells the app store than auth has completed
  * And to close the auth modal automagically
  */
 export function authComplete(): void {
@@ -163,7 +163,7 @@ export function postAppMessage(message: IMessage): void {
  * @param {String} payload - string payload sent back to the app message display
  */
 export function createChannelMessage(
-  channelToken: string, 
+  channelToken: string,
   appToken: string,
   message: string,
   attachments: [IAttachment],
@@ -178,8 +178,8 @@ export function createChannelMessage(
       "Content-Type": "application/json",
       "Authorization": "bearer " + appToken,
     },
-    redirect: "follow", 
-    referrer: "no-referrer", 
+    redirect: "follow",
+    referrer: "no-referrer",
     body: JSON.stringify({ message, attachments, payload })
   });
 }
@@ -192,7 +192,7 @@ export function createChannelMessage(
  */
 export function deleteChannelMessage(
   appToken: string,
-  channelToken: string, 
+  channelToken: string,
   payload: string,
 ): Promise<Response> {
   return fetch(`${WEBHOOK_URL}/${channelToken}/${payload}`, {
@@ -204,7 +204,7 @@ export function deleteChannelMessage(
       "Content-Type": "application/json",
       "Authorization": "bearer " + appToken,
     },
-    redirect: "follow", 
-    referrer: "no-referrer", 
+    redirect: "follow",
+    referrer: "no-referrer",
   });
 }

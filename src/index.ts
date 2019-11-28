@@ -277,14 +277,14 @@ export function updateChannelMessagesWithResourceId(
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
  * @param {String} appToken - app token
- * @param {String} resourceId - string identifiying the channel app message
+ * @param {String} messageId - string identifiying the channel app message
  */
 export function deleteChannelMessage(
   appToken: string,
   channelToken: string,
-  resourceId: string,
+  messageId: string,
 ): Promise<Response> {
-  return fetch(`${WEBHOOK_URL}/${channelToken}/${resourceId}`, {
+  return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",

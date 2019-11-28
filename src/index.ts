@@ -12,7 +12,7 @@ declare global {
  * Stores the token on the window object
  * @param {String} token - App token
  */
-export function init(token: string): void {
+export function initDevKit(token: string): void {
   window.WEEKDAY_DEVKIT_TOKEN = token;
 }
 
@@ -157,18 +157,17 @@ export function postAppMessage(message: IMessage): void {
 /**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
- * @param {String} appToken - app token
  * @param {String} message - text message for the channel message
  * @param {[IAttachment]} attachments - list of attachments to include
  * @param {String} resourceId - string identifying the remote resource
  */
 export function createChannelMessage(
   channelToken: string,
-  appToken: string,
   message: string,
   attachments: [IAttachment],
   resourceId: string
 ): Promise<Response> {
+  const appToken: string = getToken()
   return fetch(`${WEBHOOK_URL}/${channelToken}`, {
     method: "POST",
     mode: "cors",
@@ -187,7 +186,6 @@ export function createChannelMessage(
 /**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
- * @param {String} appToken - app token
  * @param {String} message - text message for the channel message
  * @param {[IAttachment]} attachments - list of attachments to include
  * @param {String} resourceId - new string identifying the remote resource
@@ -195,12 +193,12 @@ export function createChannelMessage(
  */
 export function updateChannelMessage(
   channelToken: string,
-  appToken: string,
   message: string | null,
   attachments: [IAttachment] | null,
   messageId: string,
   resourceId: string,
 ): Promise<Response> {
+  const appToken: string = getToken()
   return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
     method: "POST",
     mode: "cors",
@@ -219,14 +217,13 @@ export function updateChannelMessage(
 /**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
- * @param {String} appToken - app token
  * @param {String} resourceId - string identifying the remote resource
  */
 export function deleteChannelMessagesWithResourceId(
   channelToken: string,
-  appToken: string,
   resourceId: string,
 ): Promise<Response> {
+  const appToken: string = getToken()
   return fetch(`${WEBHOOK_URL}/${channelToken}/resource/${resourceId}`, {
     method: "DELETE",
     mode: "cors",
@@ -244,7 +241,6 @@ export function deleteChannelMessagesWithResourceId(
 /**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
- * @param {String} appToken - app token
  * @param {String} message - text message for the channel message
  * @param {[IAttachment]} attachments - list of attachments to include
  * @param {String} resourceId - new string identifying the remote resource
@@ -252,12 +248,12 @@ export function deleteChannelMessagesWithResourceId(
  */
 export function updateChannelMessagesWithResourceId(
   channelToken: string,
-  appToken: string,
   message: string | null,
   attachments: [IAttachment] | null,
   currentResourceId: string,
   resourceId: string,
 ): Promise<Response> {
+  const appToken: string = getToken()
   return fetch(`${WEBHOOK_URL}/${channelToken}/resource/${currentResourceId}`, {
     method: "POST",
     mode: "cors",
@@ -276,14 +272,13 @@ export function updateChannelMessagesWithResourceId(
 /**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
- * @param {String} appToken - app token
  * @param {String} messageId - string identifiying the channel app message
  */
 export function deleteChannelMessage(
-  appToken: string,
   channelToken: string,
   messageId: string,
 ): Promise<Response> {
+  const appToken: string = getToken()
   return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
     method: "DELETE",
     mode: "cors",

@@ -220,12 +220,37 @@ export function updateChannelMessage(
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
  * @param {String} appToken - app token
+ * @param {String} resourceId - string identifying the remote resource
+ */
+export function deleteChannelMessagesWithResourceId(
+  channelToken: string,
+  appToken: string,
+  resourceId: string,
+): Promise<Response> {
+  return fetch(`${WEBHOOK_URL}/${channelToken}/resource/${resourceId}`, {
+    method: "DELETE",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "bearer " + appToken,
+    },
+    redirect: "follow",
+    referrer: "no-referrer",
+  });
+}
+
+/**
+ * Creates a channel message using app channel webhook
+ * @param {String} channelToken - temp channel intsall token
+ * @param {String} appToken - app token
  * @param {String} message - text message for the channel message
  * @param {[IAttachment]} attachments - list of attachments to include
  * @param {String} resourceId - new string identifying the remote resource
  * @param {String} currentResourceId - old string identifying the remote resource
  */
-export function updateChannelMessageResourceId(
+export function updateChannelMessagesWithResourceId(
   channelToken: string,
   appToken: string,
   message: string | null,

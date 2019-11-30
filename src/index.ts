@@ -47,8 +47,10 @@ export function autoAdjustMessageHeight(): void {
          if (parts[0] === "resizeId" && parts.length === 2) {
            const message: IMessage = {
              type: "AUTO_ADJUST_MESSAGE_HEIGHT",
-             resizeId: parts[1],
-             payload: scrollHeight,
+             payload: {
+               resizeId: parts[1],
+               resizeHeight: scrollHeight,
+             }
            };
 
            // Send our message to the app
@@ -68,6 +70,8 @@ export function autoAdjustMessageHeight(): void {
 export function closeAppModal(): void {
   const action: IAction = {
     type: "modal-close",
+    name: "MODAL CLOSE",
+    payload: null,
   };
 
   const message: IMessage = {

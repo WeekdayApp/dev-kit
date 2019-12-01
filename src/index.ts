@@ -1,4 +1,5 @@
 import { IAction } from "./action/IAction";
+import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 
@@ -47,7 +48,7 @@ export function autoAdjustMessageHeight(): void {
          if (parts[0] === "resizeId" && parts.length === 2) {
            const message: IMessage = {
              type: "AUTO_ADJUST_MESSAGE_HEIGHT",
-             payload: {
+             content: {
                resizeId: parts[1],
                resizeHeight: scrollHeight,
              }
@@ -76,7 +77,7 @@ export function closeAppModal(): void {
 
   const message: IMessage = {
     type: "DISPATCH_APP_ACTION",
-    action,
+    content: { action },
   };
 
   postAppMessage(message);
@@ -88,11 +89,13 @@ export function closeAppModal(): void {
 export function closeAppPanel(): void {
   const action: IAction = {
     type: "panel-close",
+    name: "PANEL CLOSE",
+    payload: null,
   };
 
   const message: IMessage = {
     type: "DISPATCH_APP_ACTION",
-    action,
+    content: { action },
   };
 
   postAppMessage(message);
@@ -103,16 +106,21 @@ export function closeAppPanel(): void {
  * @param {String} name - Panel title
  * @param {String} name - Panel URL
  */
-export function openAppPanel(name: string, url: string): void {
+export function openAppPanel(name: string, url: string, token: string): void {
+  const payload: IPayload = {
+    token,
+    url,
+  };
+
   const action: IAction = {
     type: "panel",
     name,
-    url,
+    payload,
   };
 
   const message: IMessage = {
     type: "DISPATCH_APP_ACTION",
-    action,
+    content: { action },
   };
 
   postAppMessage(message);
@@ -121,18 +129,33 @@ export function openAppPanel(name: string, url: string): void {
 /**
  * Opens an app modal with an action
  * @param {String} name - Modal title
- * @param {String} name - Modal URL
+ * @param {String} url - Modal URL
+ * @param {String} height - Modal height
+ * @param {String} width - Modal width
  */
-export function openAppModal(name: string, url: string): void {
+export function openAppModal(
+  name: string,
+  url: string,
+  width: string,
+  height: string,
+  token: string
+): void {
+  const payload: IPayload = {
+    url,
+    height,
+    width,
+    token,
+  };
+
   const action: IAction = {
     type: "modal",
     name,
-    url,
+    payload,
   };
 
   const message: IMessage = {
     type: "DISPATCH_APP_ACTION",
-    action,
+    content: { action },
   };
 
   postAppMessage(message);

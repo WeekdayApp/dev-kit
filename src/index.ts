@@ -104,11 +104,12 @@ export function closeAppPanel(): void {
 /**
  * Opens an app panel with an action
  * @param {String} name - Panel title
- * @param {String} name - Panel URL
+ * @param {String} url - Panel URL
+ * @param {String} channelToken - Channel app token
  */
-export function openAppPanel(name: string, url: string, token: string): void {
+export function openAppPanel(name: string, url: string, channelToken: string): void {
   const payload: IPayload = {
-    token,
+    token: channelToken,
     url,
   };
 
@@ -132,19 +133,20 @@ export function openAppPanel(name: string, url: string, token: string): void {
  * @param {String} url - Modal URL
  * @param {String} height - Modal height
  * @param {String} width - Modal width
+ * @param {String} channelToken - Channel app token
  */
 export function openAppModal(
   name: string,
   url: string,
   width: string,
   height: string,
-  token: string
+  channelToken: string
 ): void {
   const payload: IPayload = {
     url,
     height,
     width,
-    token,
+    token: channelToken,
   };
 
   const action: IAction = {

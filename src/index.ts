@@ -3,10 +3,10 @@ import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 
-const WEBHOOK_URL: string = "https://api.weekday.sh/v1/webhook";
+const WEBHOOK_URL: string = "https://api.yack.co/v1/webhook";
 
 declare global {
-  interface Window { WEEKDAY_DEVKIT_TOKEN: string; }
+  interface Window { YACK_DEVKIT_TOKEN: string; }
 }
 
 /**
@@ -14,20 +14,20 @@ declare global {
  * @param {String} token - App token
  */
 export function initDevKit(token: string): void {
-  window.WEEKDAY_DEVKIT_TOKEN = token;
+  window.YACK_DEVKIT_TOKEN = token;
 }
 
 /**
  * Retreives the token on the window object
  */
 export function getToken(): string {
-  if (window.WEEKDAY_DEVKIT_TOKEN === null) throw new Error("Please intialize before using");
+  if (window.YACK_DEVKIT_TOKEN === null) throw new Error("Please intialize before using");
 
-  return window.WEEKDAY_DEVKIT_TOKEN;
+  return window.YACK_DEVKIT_TOKEN;
 }
 
 /**
- * Polls the document scrollHeight and sends a message to Weekday
+ * Polls the document scrollHeight and sends a message to Yack
  * to adjust the containing iframe
  */
 export function autoAdjustMessageHeight(): void {

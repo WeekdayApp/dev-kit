@@ -1,7 +1,7 @@
 import { IMessage } from "./message/IMessage";
 declare global {
     interface Window {
-        WEEKDAY_DEVKIT_TOKEN: string;
+        YACK_DEVKIT_TOKEN: string;
     }
 }
 /**
@@ -14,7 +14,7 @@ export declare function init(token: string): void;
  */
 export declare function getToken(): string;
 /**
- * Polls the document scrollHeight and sends a message to Weekday
+ * Polls the document scrollHeight and sends a message to Yack
  * to adjust the containing iframe
  */
 export declare function autoAdjustMessageHeight(): void;

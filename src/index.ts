@@ -14,6 +14,7 @@ declare global {
  * @param {String} token - App token
  */
 export function initDevKit(token: string): void {
+  console.log('DevKit token: ', token)
   window.YACK_DEVKIT_TOKEN = token;
 }
 
@@ -67,12 +68,14 @@ export function autoAdjustMessageHeight(): void {
 
  /**
   * Closes an app modal
+  * * Don't use a channel token here - it's a simple action
   */
 export function closeAppModal(): void {
   const action: IAction = {
     type: "modal-close",
     name: "MODAL CLOSE",
     payload: null,
+    token: null,
   };
 
   const message: IMessage = {
@@ -85,12 +88,14 @@ export function closeAppModal(): void {
 
 /**
  * Closes an app panel
+ * Don't use a channel token here - it's a simple action
  */
 export function closeAppPanel(): void {
   const action: IAction = {
     type: "panel-close",
     name: "PANEL CLOSE",
     payload: null,
+    token: null,
   };
 
   const message: IMessage = {
@@ -109,7 +114,6 @@ export function closeAppPanel(): void {
  */
 export function openAppPanel(name: string, url: string, channelToken: string): void {
   const payload: IPayload = {
-    token: channelToken,
     url,
   };
 
@@ -117,6 +121,7 @@ export function openAppPanel(name: string, url: string, channelToken: string): v
     type: "panel",
     name,
     payload,
+    token: channelToken,
   };
 
   const message: IMessage = {
@@ -146,13 +151,13 @@ export function openAppModal(
     url,
     height,
     width,
-    token: channelToken,
   };
 
   const action: IAction = {
     type: "modal",
     name,
     payload,
+    token: channelToken,
   };
 
   const message: IMessage = {

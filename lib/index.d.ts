@@ -21,10 +21,12 @@ export declare function getToken(): string;
 export declare function autoAdjustMessageHeight(): void;
 /**
  * Closes an app modal
+ * * Don't use a channel token here - it's a simple action
  */
 export declare function closeAppModal(): void;
 /**
  * Closes an app panel
+ * Don't use a channel token here - it's a simple action
  */
 export declare function closeAppPanel(): void;
 /**

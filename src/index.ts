@@ -3,7 +3,7 @@ import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 
-const WEBHOOK_URL: string = "https://api.yack.co/v1/webhook";
+const WEBHOOK_URL: string = "http://localhost:8181/v1/webhook";
 
 declare global {
   interface Window { YACK_DEVKIT_TOKEN: string; }

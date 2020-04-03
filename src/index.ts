@@ -44,7 +44,8 @@ export function syncMessageHeight(resizeId: string): void {
 
    // Important: we want to only run this once
    // (once there is a descrepency)
-   const interval: any = setInterval(() => {
+   // const interval: any = 
+   setInterval(() => {
      const document: any = window.document.documentElement;
      const scrollHeight: number = document.scrollHeight;
 

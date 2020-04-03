@@ -10,6 +10,14 @@ declare global {
 }
 
 /**
+ * Sends a message to the parent window
+ * @param {IMessage} message - Message object
+ */
+export function postAppMessage(message: IMessage): void {
+  window.top.postMessage(message, "*");
+}
+
+/**
  * Stores the token on the window object
  * @param {String} token - App token
  */
@@ -31,7 +39,7 @@ export function getToken(): string {
  * Polls the document scrollHeight and sends a message to Yack
  * to adjust the containing iframe
  */
-export function autoAdjustMessageHeight(): void {
+export function syncMessageHeight(resizeId: string): void {
    let currentHeight: number = 0;
 
    // Important: we want to only run this once
@@ -43,25 +51,20 @@ export function autoAdjustMessageHeight(): void {
      if (scrollHeight !== currentHeight) {
        currentHeight = scrollHeight;
 
-       window.location.search.split("&").map((query: string) => {
-         const parts: string[] = query.split("=");
-
-         if (parts[0] === "resizeId" && parts.length === 2) {
-           const message: IMessage = {
-             type: "AUTO_ADJUST_MESSAGE_HEIGHT",
-             content: {
-               resizeId: parts[1],
-               resizeHeight: scrollHeight,
-             }
-           };
-
-           // Send our message to the app
-           postAppMessage(message);
-
-           // Now kill it so it doesn't run the whole time
-           clearInterval(interval);
+       const message: IMessage = {
+         type: "SYNC_MESSAGE_HEIGHT",
+         content: {
+           resizeId,
+           resizeHeight: scrollHeight,
          }
-       });
+       };
+
+       // Send our message to the app
+       postAppMessage(message);
+
+       // Keep the window height in sync
+       // Now kill it so it doesn't run the whole time
+       // clearInterval(interval);
      }
    }, 500);
  }
@@ -169,26 +172,6 @@ export function openAppModal(
 }
 
 /**
- * Tells the app store than auth has completed
- * And to close the auth modal automagically
- */
-export function authComplete(): void {
-  const message: IMessage = {
-    type: "AUTH_COMPLETE",
-  };
-
-  postAppMessage(message);
-}
-
-/**
- * Sends a message to the parent window
- * @param {IMessage} message - Message object
- */
-export function postAppMessage(message: IMessage): void {
-  window.top.postMessage(message, "*");
-}
-
-/**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
  * @param {String} message - text message for the channel message
@@ -203,37 +186,6 @@ export function createChannelMessage(
 ): Promise<Response> {
   const appToken: string = getToken()
   return fetch(`${WEBHOOK_URL}/${channelToken}`, {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
-    },
-    redirect: "follow",
-    referrer: "no-referrer",
-    body: JSON.stringify({ message, attachments, resourceId })
-  });
-}
-
-/**
- * Creates a channel message using app channel webhook
- * @param {String} channelToken - temp channel intsall token
- * @param {String} message - text message for the channel message
- * @param {[IAttachment]} attachments - list of attachments to include
- * @param {String} resourceId - new string identifying the remote resource
- * @param {String} messageId - id of message to update
- */
-export function updateChannelMessage(
-  channelToken: string,
-  message: string | null,
-  attachments: [IAttachment] | null,
-  messageId: string,
-  resourceId: string,
-): Promise<Response> {
-  const appToken: string = getToken()
-  return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -269,6 +221,54 @@ export function deleteChannelMessagesWithResourceId(
     },
     redirect: "follow",
     referrer: "no-referrer",
+  });
+}
+
+/**
+ * Unused parts that need to be QA'd
+ * ------------------------------------------
+ */
+
+ /**
+  * Tells the app store than auth has completed
+  * And to close the auth modal automagically
+  */
+ export function authComplete(): void {
+   const message: IMessage = {
+     type: "AUTH_COMPLETE",
+   };
+
+   postAppMessage(message);
+ }
+
+/**
+ * Creates a channel message using app channel webhook
+ * @param {String} channelToken - temp channel intsall token
+ * @param {String} message - text message for the channel message
+ * @param {[IAttachment]} attachments - list of attachments to include
+ * @param {String} resourceId - new string identifying the remote resource
+ * @param {String} messageId - id of message to update
+ */
+export function updateChannelMessage(
+  channelToken: string,
+  message: string | null,
+  attachments: [IAttachment] | null,
+  messageId: string,
+  resourceId: string,
+): Promise<Response> {
+  const appToken: string = getToken()
+  return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
+    method: "PUT",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "bearer " + appToken,
+    },
+    redirect: "follow",
+    referrer: "no-referrer",
+    body: JSON.stringify({ message, attachments, resourceId })
   });
 }
 

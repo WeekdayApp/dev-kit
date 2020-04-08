@@ -3,6 +3,7 @@ import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 
+// TODO: This nneds to be managed for prod/dev
 const WEBHOOK_URL: string = "http://localhost:8181/v1/webhook";
 
 declare global {
@@ -44,7 +45,7 @@ export function syncMessageHeight(resizeId: string): void {
 
    // Important: we want to only run this once
    // (once there is a descrepency)
-   // const interval: any = 
+   // const interval: any =
    setInterval(() => {
      const document: any = window.document.documentElement;
      const scrollHeight: number = document.scrollHeight;

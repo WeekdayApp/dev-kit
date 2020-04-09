@@ -24,7 +24,8 @@ export function postAppMessage(message: IMessage): void {
  */
 export function initDevKit(token: string): void {
   console.log('DevKit token: ', token)
-  window.YACK_DEVKIT_TOKEN = token;
+
+  if (window) window.YACK_DEVKIT_TOKEN = token;
 }
 
 /**

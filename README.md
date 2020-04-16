@@ -5,7 +5,7 @@
 
 ## Installation
 ```
-npm i @yack/dev-kit
+npm i @tryyack/dev-kit
 ```
 
 ## API

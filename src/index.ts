@@ -3,11 +3,16 @@ import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 
-// TODO: This nneds to be managed for prod/dev
-const WEBHOOK_URL: string = "http://localhost:8181/v1/webhook";
+// This will be sexier in future
+const WEBHOOK_URL_PRODUCTION: string = "https://api.yack.co/v1/webhook";
+const WEBHOOK_URL_DEVELOPMENT: string = "http://localhost:8181/v1/webhook";
+const WEBHOOK_URL: string = window.YACK_DEV ? WEBHOOK_URL_DEVELOPMENT : WEBHOOK_URL_PRODUCTION;
 
 declare global {
-  interface Window { YACK_DEVKIT_TOKEN: string; }
+  interface Window {
+    YACK_DEVKIT_TOKEN: string;
+    YACK_DEV: boolean;
+  }
 }
 
 /**
@@ -22,10 +27,17 @@ export function postAppMessage(message: IMessage): void {
  * Stores the token on the window object
  * @param {String} token - App token
  */
-export function initDevKit(token: string): void {
+export function initDevKit(token: string, isDev: boolean): void {
   console.log('DevKit token: ', token)
 
-  if (window) window.YACK_DEVKIT_TOKEN = token;
+  if (window) {
+    window.YACK_DEVKIT_TOKEN = token;
+    if (isDev) {
+      window.YACK_DEV = true;
+    } else {
+      window.YACK_DEV = false;
+    }
+  }
 }
 
 /**
@@ -228,54 +240,6 @@ export function deleteChannelMessagesWithResourceId(
 }
 
 /**
- * Unused parts that need to be QA'd
- * ------------------------------------------
- */
-
- /**
-  * Tells the app store than auth has completed
-  * And to close the auth modal automagically
-  */
- export function authComplete(): void {
-   const message: IMessage = {
-     type: "AUTH_COMPLETE",
-   };
-
-   postAppMessage(message);
- }
-
-/**
- * Creates a channel message using app channel webhook
- * @param {String} channelToken - temp channel intsall token
- * @param {String} message - text message for the channel message
- * @param {[IAttachment]} attachments - list of attachments to include
- * @param {String} resourceId - new string identifying the remote resource
- * @param {String} messageId - id of message to update
- */
-export function updateChannelMessage(
-  channelToken: string,
-  message: string | null,
-  attachments: [IAttachment] | null,
-  messageId: string,
-  resourceId: string,
-): Promise<Response> {
-  const appToken: string = getToken()
-  return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
-    method: "PUT",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
-    },
-    redirect: "follow",
-    referrer: "no-referrer",
-    body: JSON.stringify({ message, attachments, resourceId })
-  });
-}
-
-/**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
  * @param {String} message - text message for the channel message
@@ -306,26 +270,15 @@ export function updateChannelMessagesWithResourceId(
   });
 }
 
-/**
- * Creates a channel message using app channel webhook
- * @param {String} channelToken - temp channel intsall token
- * @param {String} messageId - string identifiying the channel app message
- */
-export function deleteChannelMessage(
-  channelToken: string,
-  messageId: string,
-): Promise<Response> {
-  const appToken: string = getToken()
-  return fetch(`${WEBHOOK_URL}/${channelToken}/message/${messageId}`, {
-    method: "DELETE",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
-    },
-    redirect: "follow",
-    referrer: "no-referrer",
-  });
-}
+ /**
+  * ⚠️ Unimplemented ⚠️
+  * Tells the app store than auth has completed
+  * And to close the auth modal automagically
+  */
+ export function authComplete(): void {
+   const message: IMessage = {
+     type: "AUTH_COMPLETE",
+   };
+
+   postAppMessage(message);
+ }

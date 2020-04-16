@@ -1,5 +1,5 @@
 {
-  "name": "@tryyack/dev-kit",
+  "name": "@yack/dev-kit",
   "title": "Yack DevKit",
   "keywords": [
     "Yack"
@@ -30,7 +30,10 @@
       "name": "joduplessis"
     }
   ],
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
+  },
   "homepage": "https://github.com/Yack/dev-kit",
   "deprecated": false,
   "version": "0.1.0",

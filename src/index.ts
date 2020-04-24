@@ -4,9 +4,9 @@ import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 
 // This will be sexier in future
-const WEBHOOK_URL_PRODUCTION: string = "https://api.yack.co/v1/webhook";
-const WEBHOOK_URL_DEVELOPMENT: string = "http://localhost:8181/v1/webhook";
-const WEBHOOK_URL: string = window.YACK_DEV ? WEBHOOK_URL_DEVELOPMENT : WEBHOOK_URL_PRODUCTION;
+// const WEBHOOK_URL_PRODUCTION: string = "https://api.yack.co/v1/webhook";
+// const WEBHOOK_URL_DEVELOPMENT: string = "http://localhost:8181/v1/webhook";
+const WEBHOOK_URL: string = "https://api.yack.co/v1/webhook"; //window ? window.YACK_DEV ? WEBHOOK_URL_DEVELOPMENT : WEBHOOK_URL_PRODUCTION;
 
 declare global {
   interface Window {

@@ -3,6 +3,7 @@ import { IAttachment } from "./attachment/IAttachment";
 declare global {
     interface Window {
         YACK_DEVKIT_TOKEN: string;
+        YACK_DEV: boolean;
     }
 }
 /**
@@ -14,7 +15,7 @@ export declare function postAppMessage(message: IMessage): void;
  * Stores the token on the window object
  * @param {String} token - App token
  */
-export declare function initDevKit(token: string): void;
+export declare function initDevKit(token: string, isDev: boolean): void;
 /**
  * Retreives the token on the window object
  */
@@ -65,24 +66,6 @@ export declare function createChannelMessage(channelToken: string, message: stri
  */
 export declare function deleteChannelMessagesWithResourceId(channelToken: string, resourceId: string): Promise<Response>;
 /**
- * Unused parts that need to be QA'd
- * ------------------------------------------
- */
-/**
- * Tells the app store than auth has completed
- * And to close the auth modal automagically
- */
-export declare function authComplete(): void;
-/**
- * Creates a channel message using app channel webhook
- * @param {String} channelToken - temp channel intsall token
- * @param {String} message - text message for the channel message
- * @param {[IAttachment]} attachments - list of attachments to include
- * @param {String} resourceId - new string identifying the remote resource
- * @param {String} messageId - id of message to update
- */
-export declare function updateChannelMessage(channelToken: string, message: string | null, attachments: [IAttachment] | null, messageId: string, resourceId: string): Promise<Response>;
-/**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
  * @param {String} message - text message for the channel message
@@ -92,8 +75,8 @@ export declare function updateChannelMessage(channelToken: string, message: stri
  */
 export declare function updateChannelMessagesWithResourceId(channelToken: string, message: string | null, attachments: [IAttachment] | null, currentResourceId: string, resourceId: string): Promise<Response>;
 /**
- * Creates a channel message using app channel webhook
- * @param {String} channelToken - temp channel intsall token
- * @param {String} messageId - string identifiying the channel app message
+ * ⚠️ Unimplemented ⚠️
+ * Tells the app store than auth has completed
+ * And to close the auth modal automagically
  */
-export declare function deleteChannelMessage(channelToken: string, messageId: string): Promise<Response>;
+export declare function authComplete(): void;

@@ -3,15 +3,10 @@ import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 
-// This will be sexier in future
-// const WEBHOOK_URL_PRODUCTION: string = "https://api.yack.co/v1/webhook";
-// const WEBHOOK_URL_DEVELOPMENT: string = "http://localhost:8181/v1/webhook";
-const WEBHOOK_URL: string = "https://api.yack.co/v1/webhook"; //window ? window.YACK_DEV ? WEBHOOK_URL_DEVELOPMENT : WEBHOOK_URL_PRODUCTION;
-
 declare global {
   interface Window {
     YACK_DEVKIT_TOKEN: string;
-    YACK_DEV: boolean;
+    WEBHOOK_URL: string;
   }
 }
 
@@ -27,16 +22,14 @@ export function postAppMessage(message: IMessage): void {
  * Stores the token on the window object
  * @param {String} token - App token
  */
-export function initDevKit(token: string, isDev: boolean): void {
-  console.log('DevKit token: ', token)
-
+export function initDevKit(token: string, dev: boolean): void {
   if (window) {
     window.YACK_DEVKIT_TOKEN = token;
-    if (isDev) {
-      window.YACK_DEV = true;
-    } else {
-      window.YACK_DEV = false;
-    }
+    window.WEBHOOK_URL = dev
+      ? "http://localhost:8181/v1/webhook"
+      : "https://api.yack.co/v1/webhook";
+  } else {
+    throw new Error('Non-browser platforms are not supported yet.')
   }
 }
 
@@ -200,7 +193,7 @@ export function createChannelMessage(
   resourceId: string
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${WEBHOOK_URL}/${channelToken}`, {
+  return fetch(`${window.WEBHOOK_URL}/${channelToken}`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -225,7 +218,7 @@ export function deleteChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${WEBHOOK_URL}/${channelToken}/resource/${resourceId}`, {
+  return fetch(`${window.WEBHOOK_URL}/${channelToken}/resource/${resourceId}`, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",
@@ -255,7 +248,7 @@ export function updateChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${WEBHOOK_URL}/${channelToken}/resource/${currentResourceId}`, {
+  return fetch(`${window.WEBHOOK_URL}/${channelToken}/resource/${currentResourceId}`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",

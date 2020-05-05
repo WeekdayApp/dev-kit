@@ -262,16 +262,3 @@ export function updateChannelMessagesWithResourceId(
     body: JSON.stringify({ message, attachments, resourceId })
   });
 }
-
- /**
-  * ⚠️ Unimplemented ⚠️
-  * Tells the app store than auth has completed
-  * And to close the auth modal automagically
-  */
- export function authComplete(): void {
-   const message: IMessage = {
-     type: "AUTH_COMPLETE",
-   };
-
-   postAppMessage(message);
- }

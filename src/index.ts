@@ -249,7 +249,7 @@ export function updateChannelMessagesWithResourceId(
 ): Promise<Response> {
   const appToken: string = getToken()
   return fetch(`${window.WEBHOOK_URL}/${channelToken}/resource/${currentResourceId}`, {
-    method: "POST",
+    method: "PUT",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",

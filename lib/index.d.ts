@@ -3,7 +3,7 @@ import { IAttachment } from "./attachment/IAttachment";
 declare global {
     interface Window {
         YACK_DEVKIT_TOKEN: string;
-        YACK_DEV: boolean;
+        WEBHOOK_URL: string;
     }
 }
 /**
@@ -15,7 +15,7 @@ export declare function postAppMessage(message: IMessage): void;
  * Stores the token on the window object
  * @param {String} token - App token
  */
-export declare function initDevKit(token: string, isDev: boolean): void;
+export declare function initDevKit(token: string, dev: boolean): void;
 /**
  * Retreives the token on the window object
  */
@@ -58,7 +58,7 @@ export declare function openAppModal(name: string, url: string, width: string, h
  * @param {[IAttachment]} attachments - list of attachments to include
  * @param {String} resourceId - string identifying the remote resource
  */
-export declare function createChannelMessage(channelToken: string, message: string, attachments: [IAttachment], resourceId: string): Promise<Response>;
+export declare function createChannelMessage(channelToken: string, body: string, attachments: [IAttachment], resourceId: string): Promise<Response>;
 /**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token
@@ -73,10 +73,4 @@ export declare function deleteChannelMessagesWithResourceId(channelToken: string
  * @param {String} resourceId - new string identifying the remote resource
  * @param {String} currentResourceId - old string identifying the remote resource
  */
-export declare function updateChannelMessagesWithResourceId(channelToken: string, message: string | null, attachments: [IAttachment] | null, currentResourceId: string, resourceId: string): Promise<Response>;
-/**
- * ⚠️ Unimplemented ⚠️
- * Tells the app store than auth has completed
- * And to close the auth modal automagically
- */
-export declare function authComplete(): void;
+export declare function updateChannelMessagesWithResourceId(channelToken: string, body: string | null, attachments: [IAttachment] | null, currentResourceId: string, resourceId: string): Promise<Response>;

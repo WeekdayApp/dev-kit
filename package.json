@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/Yack/dev-kit",
   "deprecated": false,
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Development kit for building apps for Yack",
   "scripts": {
     "test": "",

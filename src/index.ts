@@ -188,7 +188,7 @@ export function openAppModal(
  */
 export function createChannelMessage(
   channelToken: string,
-  message: string,
+  body: string,
   attachments: [IAttachment],
   resourceId: string
 ): Promise<Response> {
@@ -204,7 +204,7 @@ export function createChannelMessage(
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ message, attachments, resourceId })
+    body: JSON.stringify({ body, attachments, resourceId })
   });
 }
 
@@ -242,7 +242,7 @@ export function deleteChannelMessagesWithResourceId(
  */
 export function updateChannelMessagesWithResourceId(
   channelToken: string,
-  message: string | null,
+  body: string | null,
   attachments: [IAttachment] | null,
   currentResourceId: string,
   resourceId: string,
@@ -259,6 +259,6 @@ export function updateChannelMessagesWithResourceId(
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ message, attachments, resourceId })
+    body: JSON.stringify({ body, attachments, resourceId })
   });
 }

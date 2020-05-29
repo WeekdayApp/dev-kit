@@ -17,6 +17,10 @@ export declare function postAppMessage(message: IMessage): void;
  */
 export declare function initDevKit(token: string, dev: boolean): void;
 /**
+ * Retreives the userId from the URL
+ */
+export declare function getUserId(): any;
+/**
  * Retreives the token on the window object
  */
 export declare function getToken(): string;

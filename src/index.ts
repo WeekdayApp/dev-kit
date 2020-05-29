@@ -34,6 +34,19 @@ export function initDevKit(token: string, dev: boolean): void {
 }
 
 /**
+ * Retreives the userId from the URL
+ */
+export function getUserId(): any {
+  const url = window.location.href
+  const parts = url.split('&')
+  const userIdPart = parts.filter(part => part.substring(0,6) == "userId")[0]
+
+  if (!userIdPart) return null
+
+  return userIdPart.split('=')[1]  
+}
+
+/**
  * Retreives the token on the window object
  */
 export function getToken(): string {
@@ -190,9 +203,10 @@ export function createChannelMessage(
   channelToken: string,
   body: string,
   attachments: [IAttachment],
-  resourceId: string
+  resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
+  const userId: any = getUserId()
   return fetch(`${window.WEBHOOK_URL}/${channelToken}`, {
     method: "POST",
     mode: "cors",
@@ -204,7 +218,7 @@ export function createChannelMessage(
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ body, attachments, resourceId })
+    body: JSON.stringify({ body, attachments, resourceId, userId })
   });
 }
 

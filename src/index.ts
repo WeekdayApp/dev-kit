@@ -204,9 +204,10 @@ export function createChannelMessage(
   body: string,
   attachments: [IAttachment],
   resourceId: string,
+  userId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  const userId: any = getUserId()
+  //const userId: any = getUserId()
   return fetch(`${window.WEBHOOK_URL}/${channelToken}`, {
     method: "POST",
     mode: "cors",

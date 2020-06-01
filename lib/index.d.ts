@@ -62,7 +62,7 @@ export declare function openAppModal(name: string, url: string, width: string, h
  * @param {[IAttachment]} attachments - list of attachments to include
  * @param {String} resourceId - string identifying the remote resource
  */
-export declare function createChannelMessage(channelToken: string, body: string, attachments: [IAttachment], resourceId: string): Promise<Response>;
+export declare function createChannelMessage(channelToken: string, body: string, attachments: [IAttachment], resourceId: string, userId: string): Promise<Response>;
 /**
  * Creates a channel message using app channel webhook
  * @param {String} channelToken - temp channel intsall token

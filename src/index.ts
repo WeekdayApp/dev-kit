@@ -2,6 +2,7 @@ import { IAction } from "./action/IAction";
 import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
+import { WEBHOOK_DEVELOPMENT, WEBHOOK_PRODUCTION } from './constants';
 
 declare global {
   interface Window {
@@ -25,9 +26,7 @@ export function postAppMessage(message: IMessage): void {
 export function initDevKit(token: string, dev: boolean): void {
   if (window) {
     window.YACK_DEVKIT_TOKEN = token;
-    window.WEBHOOK_URL = dev
-      ? "http://localhost:8181/v1/webhook"
-      : "https://api.yack.co/v1/webhook";
+    window.WEBHOOK_URL = dev ? WEBHOOK_DEVELOPMENT : WEBHOOK_PRODUCTION;
   } else {
     throw new Error('Non-browser platforms are not supported yet.')
   }

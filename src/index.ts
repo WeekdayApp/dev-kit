@@ -207,18 +207,18 @@ export function createChannelMessage(
 ): Promise<Response> {
   const appToken: string = getToken()
   //const userId: any = getUserId()
-  return fetch(`${window.API_URL}/${channelToken}`, {
+  return fetch(`${window.API_URL}/message`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
+      "Authorization": appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ body, attachments, resourceId, userId })
+    body: JSON.stringify({ body, attachments, resourceId, userId, channelToken })
   });
 }
 
@@ -232,14 +232,14 @@ export function deleteChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${window.API_URL}/${channelToken}/resource/${resourceId}`, {
+  return fetch(`${window.API_URL}/channel/${channelToken}/resource/${resourceId}`, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
+      "Authorization": appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -262,17 +262,17 @@ export function updateChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${window.API_URL}/${channelToken}/resource/${currentResourceId}`, {
+  return fetch(`${window.API_URL}/message`, {
     method: "PUT",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
+      "Authorization": appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ body, attachments, resourceId })
+    body: JSON.stringify({ body, attachments, resourceId, channelToken, currentResourceId })
   });
 }

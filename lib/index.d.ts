@@ -3,7 +3,7 @@ import { IAttachment } from "./attachment/IAttachment";
 declare global {
     interface Window {
         YACK_DEVKIT_TOKEN: string;
-        WEBHOOK_URL: string;
+        API_URL: string;
     }
 }
 /**

@@ -2,12 +2,12 @@ import { IAction } from "./action/IAction";
 import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
-import { WEBHOOK_DEVELOPMENT, WEBHOOK_PRODUCTION } from './constants';
+import { API_DEVELOPMENT, API_PRODUCTION } from './constants';
 
 declare global {
   interface Window {
     YACK_DEVKIT_TOKEN: string;
-    WEBHOOK_URL: string;
+    API_URL: string;
   }
 }
 
@@ -26,7 +26,7 @@ export function postAppMessage(message: IMessage): void {
 export function initDevKit(token: string, dev: boolean): void {
   if (window) {
     window.YACK_DEVKIT_TOKEN = token;
-    window.WEBHOOK_URL = dev ? WEBHOOK_DEVELOPMENT : WEBHOOK_PRODUCTION;
+    window.API_URL = dev ? API_DEVELOPMENT : API_PRODUCTION;
   } else {
     throw new Error('Non-browser platforms are not supported yet.')
   }
@@ -207,7 +207,7 @@ export function createChannelMessage(
 ): Promise<Response> {
   const appToken: string = getToken()
   //const userId: any = getUserId()
-  return fetch(`${window.WEBHOOK_URL}/${channelToken}`, {
+  return fetch(`${window.API_URL}/${channelToken}`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -232,7 +232,7 @@ export function deleteChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${window.WEBHOOK_URL}/${channelToken}/resource/${resourceId}`, {
+  return fetch(`${window.API_URL}/${channelToken}/resource/${resourceId}`, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",
@@ -262,7 +262,7 @@ export function updateChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${window.WEBHOOK_URL}/${channelToken}/resource/${currentResourceId}`, {
+  return fetch(`${window.API_URL}/${channelToken}/resource/${currentResourceId}`, {
     method: "PUT",
     mode: "cors",
     cache: "no-cache",

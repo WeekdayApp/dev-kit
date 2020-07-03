@@ -1,11 +1,11 @@
 
-# Yack DevKit
+# Weekday DevKit
 
 > Still under active development - use at own risk
 
 ## Installation
 ```
-npm i @tryyack/dev-kit
+npm i @weekday/dev-kit
 ```
 
 ## API

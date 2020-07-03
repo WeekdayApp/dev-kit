@@ -2,7 +2,7 @@ import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 declare global {
     interface Window {
-        YACK_DEVKIT_TOKEN: string;
+        WEEKDAY_DEVKIT_TOKEN: string;
         API_URL: string;
     }
 }
@@ -25,7 +25,7 @@ export declare function getUserId(): any;
  */
 export declare function getToken(): string;
 /**
- * Polls the document scrollHeight and sends a message to Yack
+ * Polls the document scrollHeight and sends a message to Weekday
  * to adjust the containing iframe
  */
 export declare function syncMessageHeight(resizeId: string): void;

@@ -6,7 +6,7 @@ import { API_DEVELOPMENT, API_PRODUCTION } from './constants';
 
 declare global {
   interface Window {
-    YACK_DEVKIT_TOKEN: string;
+    WEEKDAY_DEVKIT_TOKEN: string;
     API_URL: string;
   }
 }
@@ -25,7 +25,7 @@ export function postAppMessage(message: IMessage): void {
  */
 export function initDevKit(token: string, dev: boolean): void {
   if (window) {
-    window.YACK_DEVKIT_TOKEN = token;
+    window.WEEKDAY_DEVKIT_TOKEN = token;
     window.API_URL = dev ? API_DEVELOPMENT : API_PRODUCTION;
   } else {
     throw new Error('Non-browser platforms are not supported yet.')
@@ -49,13 +49,13 @@ export function getUserId(): any {
  * Retreives the token on the window object
  */
 export function getToken(): string {
-  if (window.YACK_DEVKIT_TOKEN === null) throw new Error("Please intialize before using");
+  if (window.WEEKDAY_DEVKIT_TOKEN === null) throw new Error("Please intialize before using");
 
-  return window.YACK_DEVKIT_TOKEN;
+  return window.WEEKDAY_DEVKIT_TOKEN;
 }
 
 /**
- * Polls the document scrollHeight and sends a message to Yack
+ * Polls the document scrollHeight and sends a message to Weekday
  * to adjust the containing iframe
  */
 export function syncMessageHeight(resizeId: string): void {

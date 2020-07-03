@@ -1,8 +1,8 @@
 {
-  "name": "@tryyack/dev-kit",
-  "title": "Yack DevKit",
+  "name": "@weekday/dev-kit",
+  "title": "Weekday DevKit",
   "keywords": [
-    "Yack"
+    "Weekday"
   ],
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -20,9 +20,9 @@
     "> 1%",
     "ie >= 9"
   ],
-  "repository": "https://github.com/Yack/dev-kit",
+  "repository": "https://github.com/WeekdayApp/dev-kit",
   "bugs": {
-    "url": "https://github.com/Yack/dev-kit",
+    "url": "https://github.com/WeekdayApp/dev-kit",
     "email": "jo@joduplessis.com"
   },
   "contributors": [
@@ -33,10 +33,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/Yack/dev-kit",
+  "homepage": "https://github.com/WeekdayApp/dev-kit",
   "deprecated": false,
   "version": "0.1.9",
-  "description": "Development kit for building apps for Yack",
+  "description": "Development kit for building apps for Weekday",
   "scripts": {
     "test": "",
     "dev": "tsc -w -p tsconfig.json",

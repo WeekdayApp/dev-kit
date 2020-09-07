@@ -207,14 +207,14 @@ export function createChannelMessage(
 ): Promise<Response> {
   const appToken: string = getToken()
   //const userId: any = getUserId()
-  return fetch(`${window.API_URL}/message`, {
+  return fetch(`${window.API_URL}/app/message`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": appToken,
+      "weekdayapp": appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -232,14 +232,14 @@ export function deleteChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${window.API_URL}/channel/${channelToken}/resource/${resourceId}`, {
+  return fetch(`${window.API_URL}/app/channel/${channelToken}/resource/${resourceId}`, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": appToken,
+      "weekdayapp": appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -262,14 +262,14 @@ export function updateChannelMessagesWithResourceId(
   resourceId: string,
 ): Promise<Response> {
   const appToken: string = getToken()
-  return fetch(`${window.API_URL}/message`, {
+  return fetch(`${window.API_URL}/app/message`, {
     method: "PUT",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": appToken,
+      "weekdayapp": appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",

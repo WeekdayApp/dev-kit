@@ -2,10 +2,11 @@ import { IAction } from "./action/IAction";
 import { IPayload } from "./action/IPayload";
 import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
-import { API_DEVELOPMENT, API_PRODUCTION } from './constants';
+import { API_DEVELOPMENT, API_PRODUCTION, ERRORS } from './constants';
 
 declare global {
   interface Window {
+    syncMessageHeight: any,
     WEEKDAY_DEVKIT_TOKEN: string;
     API_URL: string;
   }
@@ -23,35 +24,62 @@ export function postAppMessage(message: IMessage): void {
  * Stores the token on the window object
  * @param {String} token - App token
  */
-export function initDevKit(token: string, dev: boolean): void {
+export function initDevKit(token: string, dev: boolean): boolean {
   if (window) {
     window.WEEKDAY_DEVKIT_TOKEN = token;
     window.API_URL = dev ? API_DEVELOPMENT : API_PRODUCTION;
+    return true;
   } else {
-    throw new Error('Non-browser platforms are not supported yet.')
+    throw new Error(ERRORS.NO_NODEJS)
   }
 }
 
 /**
  * Retreives the userId from the URL
+ * This URL will always be available in a sandboxed environment
  */
 export function getUserId(): any {
-  const url = window.location.href
-  const parts = url.split('&')
-  const userIdPart = parts.filter(part => part.substring(0,6) == "userId")[0]
+  const url: string = window.location.href;
+  const queryString: string = url.split("?")[1];
 
-  if (!userIdPart) return null
+  if (!queryString) throw new Error(ERRORS.NO_USER_ID);
 
-  return userIdPart.split('=')[1]  
+  const parameters: string[] = queryString.split("&");
+  let userIdParameterValue: string = "";
+
+  // Iterate over the parameter to find the userId
+  // If we find it, then we save above
+  parameters.filter(parameter => {
+    const parameterParts: string[] = parameter.split("=");
+    const key: string = parameterParts[0];
+    const value: string = parameterParts[1];
+
+    // We found it
+    if (key == "userId") userIdParameterValue = value;
+  });
+  
+  // If we couldn't find it, then boohoo
+  if (userIdParameterValue == "") throw new Error(ERRORS.NO_USER_ID);
+
+  // Otherwise return it
+  return userIdParameterValue;
 }
 
 /**
  * Retreives the token on the window object
  */
 export function getToken(): string {
-  if (window.WEEKDAY_DEVKIT_TOKEN === null) throw new Error("Please intialize before using");
+  let token: string = "";
 
-  return window.WEEKDAY_DEVKIT_TOKEN;
+  // If it's a browser
+  if (window) {
+    if (window.WEEKDAY_DEVKIT_TOKEN === null) throw new Error(ERRORS.PLEASE_INIT);
+    token = window.WEEKDAY_DEVKIT_TOKEN;
+  } else {
+    throw new Error(ERRORS.NO_NODEJS);
+  }
+
+  return token;
 }
 
 /**
@@ -59,7 +87,7 @@ export function getToken(): string {
  * to adjust the containing iframe
  */
 export function syncMessageHeight(resizeId: string): void {
-   let currentHeight: number = 0;
+   let currentHeight: number = -1;
 
    // Important: we want to only run this once
    // (once there is a descrepency)

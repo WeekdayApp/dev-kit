@@ -2,6 +2,7 @@ import { IMessage } from "./message/IMessage";
 import { IAttachment } from "./attachment/IAttachment";
 declare global {
     interface Window {
+        syncMessageHeight: any;
         WEEKDAY_DEVKIT_TOKEN: string;
         API_URL: string;
     }
@@ -15,9 +16,10 @@ export declare function postAppMessage(message: IMessage): void;
  * Stores the token on the window object
  * @param {String} token - App token
  */
-export declare function initDevKit(token: string, dev: boolean): void;
+export declare function initDevKit(token: string, dev: boolean): boolean;
 /**
  * Retreives the userId from the URL
+ * This URL will always be available in a sandboxed environment
  */
 export declare function getUserId(): any;
 /**

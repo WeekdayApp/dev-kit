@@ -1,5 +1,7 @@
 /**
- * Correposnds to type AppActionPayload
+ * Interface for action payloads
+ *
+ * @interface IPayload
  */
 export interface IPayload {
   url?: string;

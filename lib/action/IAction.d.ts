@@ -1,6 +1,8 @@
 import { IPayload } from "./IPayload";
 /**
- * Correposnds to type AppAction
+ * Interface for actions
+ *
+ * @interface IAction
  */
 export interface IAction {
     type: string;

@@ -39,16 +39,24 @@
   "description": "Development kit for building apps for Weekday",
   "scripts": {
     "test": "jest",
+    "jsdoc": "jsdoc",
+    "jsdoc2md": "jsdoc2md",
+    "docs2md": "npm run jsdoc2md ./lib/index.js >> ./out/index.md",
+    "docs": "npm run jsdoc ./lib/index.js",
     "dev": "tsc -w -p tsconfig.json",
     "build": "tsc -p tsconfig.json",
+    "build:deploy": "npm run build && npm run docs && npm run docs2md",
     "lint": "tslint --project ./"
   },
   "author": "Jo du Plessis",
   "license": "MIT",
   "peerDependencies": {},
-  "dependencies": {},
+  "dependencies": {
+    "jsdoc": "^3.6.6"
+  },
   "devDependencies": {
     "jest": "^26.4.2",
+    "jsdoc-to-markdown": "^6.0.1",
     "ts-loader": "^6.0.4",
     "tslint": "^5.18.0",
     "tslint-loader": "^3.5.4",

@@ -45,7 +45,7 @@
     "docs": "npm run jsdoc ./lib ./README.md && rm -rf ./docs && mv ./out ./docs",
     "dev": "tsc -w -p tsconfig.json",
     "build": "tsc -p tsconfig.json",
-    "build:deploy": "npm run build && npm run docs && npm run docs2md",
+    "build:docs": "npm run docs && npm run docs2md",
     "lint": "tslint --project ./"
   },
   "author": "Jo du Plessis",

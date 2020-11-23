@@ -245,7 +245,7 @@ export function createChannelMessage(
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "weekdayapp": appToken,
+      "Authorization": "bearer " + appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -270,7 +270,7 @@ export function deleteChannelMessagesWithResourceId(
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "weekdayapp": appToken,
+      "Authorization": "bearer " + appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -300,7 +300,7 @@ export function updateChannelMessagesWithResourceId(
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "weekdayapp": appToken,
+      "Authorization": "bearer " + appToken,
     },
     redirect: "follow",
     referrer: "no-referrer",

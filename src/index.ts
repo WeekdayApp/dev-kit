@@ -89,18 +89,12 @@ export function getToken(): string {
  * @param {string} resizeId - A UUID identifying a single message iframe
  */
 export function syncMessageHeight(resizeId: string): void {
-   let currentHeight: number = -1;
-
-   // Important: we want to only run this once
-   // (once there is a descrepency)
-   // const interval: any =
    setInterval(() => {
      const document: any = window.document.documentElement;
      const scrollHeight: number = document.scrollHeight;
+     const offsetHeight: number = document.offsetHeight;
 
-     if (scrollHeight !== currentHeight) {
-       currentHeight = scrollHeight;
-
+     if (scrollHeight !== offsetHeight) {
        const message: IMessage = {
          type: "SYNC_MESSAGE_HEIGHT",
          content: {
@@ -111,10 +105,6 @@ export function syncMessageHeight(resizeId: string): void {
 
        // Send our message to the app
        postAppMessage(message);
-
-       // Keep the window height in sync
-       // Now kill it so it doesn't run the whole time
-       // clearInterval(interval);
      }
    }, 500);
  }

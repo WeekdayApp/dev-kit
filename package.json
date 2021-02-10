@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/WeekdayApp/dev-kit",
   "deprecated": false,
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Development kit for building apps for Weekday",
   "scripts": {
     "test": "jest",

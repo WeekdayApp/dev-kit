@@ -153,9 +153,9 @@ export function closeAppPanel(): void {
  * Opens an app panel with an action
  * @param {string} name - Panel title
  * @param {string} url - Panel iframe URL 
- * @param {string} channelToken - Channel app token (generated when an app is installed on a channel)
+ * @param {string} token - Channel app token (generated when an app is installed on a channel)
  */
-export function openAppPanel(name: string, url: string, channelToken: string): void {
+export function openAppPanel(name: string, url: string, token: string): void {
   const payload: IPayload = {
     url,
   };
@@ -164,7 +164,7 @@ export function openAppPanel(name: string, url: string, channelToken: string): v
     type: "panel",
     name,
     payload,
-    token: channelToken,
+    token,
   };
 
   const message: IMessage = {
@@ -181,14 +181,14 @@ export function openAppPanel(name: string, url: string, channelToken: string): v
  * @param {string} url - Modal URL
  * @param {string} height - Modal height, can be % or px
  * @param {string} width - Modal width, can be % or px
- * @param {string} channelToken - Channel app token
+ * @param {string} token - Channel app token
  */
 export function openAppModal(
   name: string,
   url: string,
   width: string,
   height: string,
-  channelToken: string
+  token: string
 ): void {
   const payload: IPayload = {
     url,
@@ -200,7 +200,7 @@ export function openAppModal(
     type: "modal",
     name,
     payload,
-    token: channelToken,
+    token,
   };
 
   const message: IMessage = {
@@ -213,21 +213,18 @@ export function openAppModal(
 
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} body - text message for the channel message
  * @param {Array.<IAttachment>} attachments - list of attachments to include
  * @param {string} resourceId - string identifying the remote resource
  * @param {string} userId - a userId for the user (passed as a query string parameter)
  */
 export function createChannelMessage(
-  channelToken: string,
+  token: string,
   body: string,
   attachments: [IAttachment],
   resourceId: string,
-  userId: string,
 ): Promise<Response> {
-  const appToken: string = getToken()
-  //const userId: any = getUserId()
   return fetch(`${window.API_URL}/app/message`, {
     method: "POST",
     mode: "cors",
@@ -235,32 +232,31 @@ export function createChannelMessage(
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
+      "Authorization": "bearer " + token,
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ body, attachments, resourceId, userId, channelToken })
+    body: JSON.stringify({ body, attachments, resourceId })
   });
 }
 
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} resourceId - string identifying the remote resource
  */
-export function deleteChannelMessagesWithResourceId(
-  channelToken: string,
+export function deleteChannelMessage(
+  token: string,
   resourceId: string,
 ): Promise<Response> {
-  const appToken: string = getToken()
-  return fetch(`${window.API_URL}/app/channel/${channelToken}/resource/${resourceId}`, {
+  return fetch(`${window.API_URL}/app/message/${resourceId}`, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
+      "Authorization": "bearer " + token,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -269,31 +265,29 @@ export function deleteChannelMessagesWithResourceId(
 
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} body - text message for the channel message
  * @param {Array.<IAttachment>} attachments - list of attachments to include
  * @param {string} currentResourceId - old string identifying the remote resource
  * @param {string} resourceId - new string identifying the remote resource
  */
-export function updateChannelMessagesWithResourceId(
-  channelToken: string,
+export function updateChannelMessage(
+  token: string,
   body: string | null,
   attachments: [IAttachment] | null,
-  currentResourceId: string,
   resourceId: string,
 ): Promise<Response> {
-  const appToken: string = getToken()
-  return fetch(`${window.API_URL}/app/message`, {
+  return fetch(`${window.API_URL}/app/message/${resourceId}`, {
     method: "PUT",
     mode: "cors",
     cache: "no-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "bearer " + appToken,
+      "Authorization": "bearer " + token,
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ body, attachments, resourceId, channelToken, currentResourceId })
+    body: JSON.stringify({ body, attachments })
   });
 }

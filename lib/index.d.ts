@@ -47,39 +47,39 @@ export declare function closeAppPanel(): void;
  * Opens an app panel with an action
  * @param {string} name - Panel title
  * @param {string} url - Panel iframe URL
- * @param {string} channelToken - Channel app token (generated when an app is installed on a channel)
+ * @param {string} token - Channel app token (generated when an app is installed on a channel)
  */
-export declare function openAppPanel(name: string, url: string, channelToken: string): void;
+export declare function openAppPanel(name: string, url: string, token: string): void;
 /**
  * Opens an app modal with an action
  * @param {string} name - Modal title
  * @param {string} url - Modal URL
  * @param {string} height - Modal height, can be % or px
  * @param {string} width - Modal width, can be % or px
- * @param {string} channelToken - Channel app token
+ * @param {string} token - Channel app token
  */
-export declare function openAppModal(name: string, url: string, width: string, height: string, channelToken: string): void;
+export declare function openAppModal(name: string, url: string, width: string, height: string, token: string): void;
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} body - text message for the channel message
  * @param {Array.<IAttachment>} attachments - list of attachments to include
  * @param {string} resourceId - string identifying the remote resource
  * @param {string} userId - a userId for the user (passed as a query string parameter)
  */
-export declare function createChannelMessage(channelToken: string, body: string, attachments: [IAttachment], resourceId: string, userId: string): Promise<Response>;
+export declare function createChannelMessage(token: string, body: string, attachments: [IAttachment], resourceId: string): Promise<Response>;
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} resourceId - string identifying the remote resource
  */
-export declare function deleteChannelMessagesWithResourceId(channelToken: string, resourceId: string): Promise<Response>;
+export declare function deleteChannelMessage(token: string, resourceId: string): Promise<Response>;
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} body - text message for the channel message
  * @param {Array.<IAttachment>} attachments - list of attachments to include
  * @param {string} currentResourceId - old string identifying the remote resource
  * @param {string} resourceId - new string identifying the remote resource
  */
-export declare function updateChannelMessagesWithResourceId(channelToken: string, body: string | null, attachments: [IAttachment] | null, currentResourceId: string, resourceId: string): Promise<Response>;
+export declare function updateChannelMessage(token: string, body: string | null, attachments: [IAttachment] | null, resourceId: string): Promise<Response>;

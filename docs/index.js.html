@@ -104,15 +104,11 @@ exports.getToken = getToken;
  * @param {string} resizeId - A UUID identifying a single message iframe
  */
 function syncMessageHeight(resizeId) {
-    let currentHeight = -1;
-    // Important: we want to only run this once
-    // (once there is a descrepency)
-    // const interval: any =
     setInterval(() => {
         const document = window.document.documentElement;
         const scrollHeight = document.scrollHeight;
-        if (scrollHeight !== currentHeight) {
-            currentHeight = scrollHeight;
+        const offsetHeight = document.offsetHeight;
+        if (scrollHeight !== offsetHeight) {
             const message = {
                 type: "SYNC_MESSAGE_HEIGHT",
                 content: {
@@ -122,9 +118,6 @@ function syncMessageHeight(resizeId) {
             };
             // Send our message to the app
             postAppMessage(message);
-            // Keep the window height in sync
-            // Now kill it so it doesn't run the whole time
-            // clearInterval(interval);
         }
     }, 500);
 }
@@ -169,9 +162,9 @@ exports.closeAppPanel = closeAppPanel;
  * Opens an app panel with an action
  * @param {string} name - Panel title
  * @param {string} url - Panel iframe URL
- * @param {string} channelToken - Channel app token (generated when an app is installed on a channel)
+ * @param {string} token - Channel app token (generated when an app is installed on a channel)
  */
-function openAppPanel(name, url, channelToken) {
+function openAppPanel(name, url, token) {
     const payload = {
         url,
     };
@@ -179,7 +172,7 @@ function openAppPanel(name, url, channelToken) {
         type: "panel",
         name,
         payload,
-        token: channelToken,
+        token,
     };
     const message = {
         type: "DISPATCH_APP_ACTION",
@@ -194,9 +187,9 @@ exports.openAppPanel = openAppPanel;
  * @param {string} url - Modal URL
  * @param {string} height - Modal height, can be % or px
  * @param {string} width - Modal width, can be % or px
- * @param {string} channelToken - Channel app token
+ * @param {string} token - Channel app token
  */
-function openAppModal(name, url, width, height, channelToken) {
+function openAppModal(name, url, width, height, token) {
     const payload = {
         url,
         height,
@@ -206,7 +199,7 @@ function openAppModal(name, url, width, height, channelToken) {
         type: "modal",
         name,
         payload,
-        token: channelToken,
+        token,
     };
     const message = {
         type: "DISPATCH_APP_ACTION",
@@ -217,15 +210,13 @@ function openAppModal(name, url, width, height, channelToken) {
 exports.openAppModal = openAppModal;
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} body - text message for the channel message
  * @param {Array.&lt;IAttachment>} attachments - list of attachments to include
  * @param {string} resourceId - string identifying the remote resource
  * @param {string} userId - a userId for the user (passed as a query string parameter)
  */
-function createChannelMessage(channelToken, body, attachments, resourceId, userId) {
-    const appToken = getToken();
-    //const userId: any = getUserId()
+function createChannelMessage(token, body, attachments, resourceId) {
     return fetch(`${window.API_URL}/app/message`, {
         method: "POST",
         mode: "cors",
@@ -233,60 +224,58 @@ function createChannelMessage(channelToken, body, attachments, resourceId, userI
         credentials: "same-origin",
         headers: {
             "Content-Type": "application/json",
-            "weekdayapp": appToken,
+            "Authorization": "bearer " + token,
         },
         redirect: "follow",
         referrer: "no-referrer",
-        body: JSON.stringify({ body, attachments, resourceId, userId, channelToken })
+        body: JSON.stringify({ body, attachments, resourceId })
     });
 }
 exports.createChannelMessage = createChannelMessage;
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} resourceId - string identifying the remote resource
  */
-function deleteChannelMessagesWithResourceId(channelToken, resourceId) {
-    const appToken = getToken();
-    return fetch(`${window.API_URL}/app/channel/${channelToken}/resource/${resourceId}`, {
+function deleteChannelMessage(token, resourceId) {
+    return fetch(`${window.API_URL}/app/message/${resourceId}`, {
         method: "DELETE",
         mode: "cors",
         cache: "no-cache",
         credentials: "same-origin",
         headers: {
             "Content-Type": "application/json",
-            "weekdayapp": appToken,
+            "Authorization": "bearer " + token,
         },
         redirect: "follow",
         referrer: "no-referrer",
     });
 }
-exports.deleteChannelMessagesWithResourceId = deleteChannelMessagesWithResourceId;
+exports.deleteChannelMessage = deleteChannelMessage;
 /**
  * Creates a channel message using app channel webhook
- * @param {string} channelToken - temp channel intsall token
+ * @param {string} token - temp channel intsall token
  * @param {string} body - text message for the channel message
  * @param {Array.&lt;IAttachment>} attachments - list of attachments to include
  * @param {string} currentResourceId - old string identifying the remote resource
  * @param {string} resourceId - new string identifying the remote resource
  */
-function updateChannelMessagesWithResourceId(channelToken, body, attachments, currentResourceId, resourceId) {
-    const appToken = getToken();
-    return fetch(`${window.API_URL}/app/message`, {
+function updateChannelMessage(token, body, attachments, resourceId) {
+    return fetch(`${window.API_URL}/app/message/${resourceId}`, {
         method: "PUT",
         mode: "cors",
         cache: "no-cache",
         credentials: "same-origin",
         headers: {
             "Content-Type": "application/json",
-            "weekdayapp": appToken,
+            "Authorization": "bearer " + token,
         },
         redirect: "follow",
         referrer: "no-referrer",
-        body: JSON.stringify({ body, attachments, resourceId, channelToken, currentResourceId })
+        body: JSON.stringify({ body, attachments })
     });
 }
-exports.updateChannelMessagesWithResourceId = updateChannelMessagesWithResourceId;
+exports.updateChannelMessage = updateChannelMessage;
 //# sourceMappingURL=index.js.map</code></pre>
         </article>
     </section>
@@ -297,13 +286,13 @@ exports.updateChannelMessagesWithResourceId = updateChannelMessagesWithResourceI
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#closeAppModal">closeAppModal</a></li><li><a href="global.html#closeAppPanel">closeAppPanel</a></li><li><a href="global.html#createChannelMessage">createChannelMessage</a></li><li><a href="global.html#deleteChannelMessagesWithResourceId">deleteChannelMessagesWithResourceId</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUserId">getUserId</a></li><li><a href="global.html#initDevKit">initDevKit</a></li><li><a href="global.html#openAppModal">openAppModal</a></li><li><a href="global.html#openAppPanel">openAppPanel</a></li><li><a href="global.html#postAppMessage">postAppMessage</a></li><li><a href="global.html#syncMessageHeight">syncMessageHeight</a></li><li><a href="global.html#updateChannelMessagesWithResourceId">updateChannelMessagesWithResourceId</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#closeAppModal">closeAppModal</a></li><li><a href="global.html#closeAppPanel">closeAppPanel</a></li><li><a href="global.html#createChannelMessage">createChannelMessage</a></li><li><a href="global.html#deleteChannelMessage">deleteChannelMessage</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUserId">getUserId</a></li><li><a href="global.html#initDevKit">initDevKit</a></li><li><a href="global.html#openAppModal">openAppModal</a></li><li><a href="global.html#openAppPanel">openAppPanel</a></li><li><a href="global.html#postAppMessage">postAppMessage</a></li><li><a href="global.html#syncMessageHeight">syncMessageHeight</a></li><li><a href="global.html#updateChannelMessage">updateChannelMessage</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Sep 24 2020 11:58:32 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 23 2021 06:26:16 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

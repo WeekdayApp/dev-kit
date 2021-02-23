@@ -213,10 +213,10 @@ export function openAppModal(
 
 /**
  * Creates a channel message using app channel webhook
- * @param {string} token - temp channel intsall token
+ * @param {string} token - temp channel install token
  * @param {string} body - text message for the channel message
  * @param {Array.<IAttachment>} attachments - list of attachments to include
- * @param {string} resourceId - string identifying the remote resource
+ * @param {string} resourceId - string identifying the remote resource (optional)
  * @param {string} userId - a userId for the user (passed as a query string parameter)
  */
 export function createChannelMessage(
